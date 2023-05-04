@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@await Component.InvokeAsync("HeroArea")
+
+@await Component.InvokeAsync("PopularDeals")
+
+@await Component.InvokeAsync("Categories")
+
+<partial name="_CallToAction" />
+

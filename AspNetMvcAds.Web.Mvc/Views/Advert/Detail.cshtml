@@ -1,0 +1,223 @@
+﻿@model AdvertViewModel
+
+<!--===================================
+=            Store Section            =
+====================================-->
+<section class="section bg-gray">
+    <!-- Container Start -->
+    <div class="container">
+        <div class="row">
+            <!-- Left sidebar -->
+            <div class="col-md-8">
+                <div class="product-details">
+                    <h1 class="product-title">@Model.Advert.Title</h1>
+                    <div class="product-meta">
+                        <ul class="list-inline">
+                            <li class="list-inline-item"><i class="fa fa-user-o"></i> <a href="">@Model.Advert.User.Name</a></li>
+                            @if (@Model.Category != null)
+                            {
+                                <li class="list-inline-item">
+                                    <i class="fa fa-folder-open-o"></i>
+                                    <a asp-controller="Category" asp-action="Index" asp-route-cid="@Model.Category.Id">
+                                        @Model.Category.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- product slider -->
+                    <div class="product-slider">
+                        @if (Model.AdvertImages.Count > 0)
+                        {
+                            int order = 0;
+                            foreach (var item in Model.AdvertImages)
+                            {
+                                order++;
+                                var block = order > 1 ? "d-block" : "";
+
+                                <div class="product-slider-item my-4" data-image="/images/products/@item.ImagePath">
+                                    <img class="@block img-fluid w-100" src="~/images/products/@item.ImagePath" alt="@item.Advert.Title">
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col-md-5">
+                                <p><b>Product photo was not added</b></p>
+                            </div>
+                        }
+                    </div>
+                    <!-- product slider -->
+
+                    <div class="content mt-5 pt-5">
+                        <ul class="nav nav-pills  justify-content-center" id="pills-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home"
+                                   aria-selected="true">Advert Description</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile"
+                                   aria-selected="false">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact"
+                                   aria-selected="false">Comments</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                                <h3 class="tab-title">Description</h3>
+                                @Model.Advert.Description
+                            </div>
+                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                <h3 class="tab-title">Advert Features</h3>
+                                <table class="table table-bordered product-table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Advert Title</td>
+                                            <td>@Model.Advert.Title</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Date of add</td>
+                                            <td>@Model.Advert.CreatedAt</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                                <h3 class="tab-title">Advert Comments</h3>
+                                <div class="product-review">
+                                    @if (Model.AdvertComments.Count > 0)
+                                    {
+                                        @foreach (var item in Model.AdvertComments)
+                                        {
+                                            <div class="media">
+                                                <img src="@item.User.Name" alt="">
+                                                <div class="media-body">
+                                                    <div class="ratings">
+                                                        <ul class="list-inline">
+                                                            @for (var i = 1; i <= item.CommentStar; i++)
+                                                            {
+                                                                <li class="list-inline-item">
+                                                                    <i class="fa fa-star"></i>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                    <div class="name">
+                                                        <h5>@item.User.Name</h5>
+                                                    </div>
+                                                    <div class="date">
+                                                        <p>@item.CreatedAt</p>
+                                                    </div>
+                                                    <div class="review-comment">
+                                                        <p>@item.Comment</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div>
+                                            <p><b>This Advert has been not commented yet</b></p>
+                                        </div>
+                                    }
+
+                                    <div class="review-submission">
+                                        <h3 class="tab-title">Comment</h3>
+                                        <div class="rate">
+                                            <div class="starrr"></div>
+                                        </div>
+                                        <div class="review-submit">
+                                            <form class="row">
+                                                <div class="col-12">
+                                                    <textarea name="comment" id="comment" rows="10" class="form-control" placeholder="Yorum"></textarea>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="button" id="saveCommentButton" class="btn btn-main">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="sidebar">
+
+                    <!-- User Profile widget -->
+                    <div class="widget user text-center">
+                        <h4><a href="">@Model.Advert.User.Name</a></h4>
+                        <p class="member-time">Member Since @Model.Advert.User.CreatedAt</p>
+                        
+                        <ul class="list-inline mt-20">
+                            <li class="list-inline-item">
+                                <a href="tel: @Model.Advert.User.Phone" class="btn btn-contact d-inline-block btn-primary px-lg-5 my-1 px-md-3">
+                                    @Model.Advert.User.Phone
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Safety tips widget -->
+                    <div class="widget disclaimer">
+                        <h5 class="widget-header">Safe Shopping Ways</h5>
+                        <ul>
+                            <li>Avoid what looks great</li>
+                            <li>Never shop on public Wi-Fi network</li>
+                            <li>Make the Payment after confirming the product</li>
+                            <li>Choose strong passwords</li>
+                            <li>Use a VPN</li>
+                            <li>Check the product before you buy</li>
+                        </ul>
+                    </div>
+                    <!-- Coupon Widget -->
+                    <div class="widget coupon text-center">
+                        <!-- Coupon description -->
+                        <p>
+                           Have a product you want to sell? Post an advert to share with our followers.
+                        </p>
+                        <!-- Submit button -->
+                        <a class="btn btn-transparent-white" asp-controller="advert" asp-action="addlisting">Post a Advert</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Container End -->
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(function() {
+            $('#saveCommentButton').on('click', function() {
+                let starCount = document.querySelectorAll(".starrr .fa-star").length;
+
+                $.ajax({
+                    method: "POST",
+                    url: "/Advert/SaveComment",
+                    data: { comment: $('#comment').val(), advertId: @Context.GetRouteValue("id"), star: starCount }
+                }).done(function(msg) {
+                    $('.review-submission').html(msg);
+                    //location.reload();
+                });
+            });
+        });
+    </script>
+}
+
+
+
+
+
